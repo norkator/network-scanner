@@ -1,0 +1,17 @@
+{
+  "name": "network-scanner",
+  "version": "0.9.0",
+  "description": "Network Scanner",
+  "main": "network-scanner.js",
+  "repository": "https://github.com/norkator/network-scanner.git",
+  "author": "Norkator <nitramite@outlook.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "dotenv": "8.2.0",
+    "evilscan": "1.8.0",
+    "pg": "8.5.1",
+    "pgtools": "0.3.1",
+    "sequelize": "6.6.2"
+  }
+}
