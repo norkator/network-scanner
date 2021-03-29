@@ -28,6 +28,8 @@ DB_PASSWORD=
 DB_PORT=5432
 
 SCAN_DELAY_MS=50
+
+API_PORT=1234
 ```
 
 Run process once to create db and tables via `node network-scanner.js`
@@ -42,3 +44,15 @@ Define scan tasks at `scans` table like so. Finished false, process updates it a
 ![scans](doc/scans.PNG) 
 
 Run the app to see some magic.
+
+
+API
+-----
+Basic API is listening by default at: http://localhost:1234/  
+API documentation available here: http://localhost:1234/api-docs  
+
+
+
+Licence
+============
+MIT
