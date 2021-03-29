@@ -6,7 +6,7 @@
   "repository": "https://github.com/norkator/network-scanner.git",
   "author": "Norkator <nitramite@outlook.com>",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "dependencies": {
     "dotenv": "8.2.0",
     "evilscan": "1.8.0",
