@@ -35,10 +35,10 @@ Run process once to create db and tables via `node network-scanner.js`
 
 Database config
 -----
-Define ports to scan at `ports` table. Use enabled to toggle will it be scanned.
+Define ports to scan at `ports` table. Use enabled to toggle will it be scanned.  
 ![ports](doc/ports.PNG) 
 
-Define scan tasks at `scans` table like so. Finished false, process updates it as true when scanned.
+Define scan tasks at `scans` table like so. Finished false, process updates it as true when scanned.  
 ![scans](doc/scans.PNG) 
 
 Run the app to see some magic.
