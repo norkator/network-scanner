@@ -32,15 +32,6 @@ const swaggerOptions = {
 database.DatabaseExists().then(async () => {
   const sequelize = require('./module/sequelize');
 
-  // Repeat with scheduler
-  await RunScans(sequelize); // run immediately
-  schedule.scheduleJob('* /30 * * * *', async () => {
-    if (!scanRunning) {
-      await RunScans(sequelize);
-    }
-  });
-
-
   // init api
   const swaggerSpec = swaggerJsdoc(swaggerOptions);
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -52,6 +43,15 @@ database.DatabaseExists().then(async () => {
   app.listen(process.env.API_PORT, () => {
     logger.log(`API listening on port http://localhost:${process.env.API_PORT}/`, logger.LOG_YELLOW);
     logger.log(`API documentation at http://localhost:${process.env.API_PORT}/api-docs`, logger.LOG_YELLOW);
+  });
+
+
+  // Repeat with scheduler
+  await RunScans(sequelize); // run immediately
+  schedule.scheduleJob('* /30 * * * *', async () => {
+    if (!scanRunning) {
+      await RunScans(sequelize);
+    }
   });
 });
 
