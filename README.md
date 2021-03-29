@@ -44,3 +44,15 @@ Define scan tasks at `scans` table like so. Finished false, process updates it a
 ![scans](doc/scans.PNG) 
 
 Run the app to see some magic.
+
+
+API
+-----
+Basic API is listening by default at: http://localhost:1234/  
+API documentation available here: http://localhost:1234/api-docs  
+
+
+
+Licence
+============
+MIT

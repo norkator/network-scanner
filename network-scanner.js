@@ -9,6 +9,7 @@ const express = require('express');
 const app = express();
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
+const packageJson = require('./package');
 
 
 const timeout = ms => new Promise(res => setTimeout(res, ms));
@@ -19,8 +20,8 @@ const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Hello World',
-      version: '1.0.0',
+      title: packageJson.description,
+      version: packageJson.version,
     },
   },
   apis: ['./module/api.js'],
