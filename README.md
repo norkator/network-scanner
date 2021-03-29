@@ -28,6 +28,8 @@ DB_PASSWORD=
 DB_PORT=5432
 
 SCAN_DELAY_MS=50
+
+API_PORT=1234
 ```
 
 Run process once to create db and tables via `node network-scanner.js`
