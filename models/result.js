@@ -25,7 +25,7 @@ module.exports = (sequelize, type) => {
       allowNull: false,
     },
     banner: {
-      type: type.STRING,
+      type: type.TEXT,
     },
   })
 };
