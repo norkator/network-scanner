@@ -21,14 +21,18 @@ exports.ScanIp = async function (sequelize, scanId, targetIp, ports) {
   };
   new evilScan(options, async function (error, scan) {
     scan.on('result', data => {
-      console.log(data);
-      sequelize.Result.create({
-        scanId: scanId,
-        ip: data.ip,
-        port: data.port,
-        status: data.status,
-        banner: data.banner,
-      }).then(() => null);
+      if (data.status === 'open') {
+        logger.log(data, logger.LOG_GREEN);
+        sequelize.Result.create({
+          scanId: scanId,
+          ip: data.ip,
+          port: data.port,
+          status: data.status,
+          banner: data.banner,
+        }).then(() => null);
+      } else {
+        logger.log(data, logger.LOG_RED);
+      }
     });
 
     scan.run();
