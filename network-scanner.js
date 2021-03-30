@@ -72,7 +72,7 @@ async function RunScans(sequelize) {
     scanRunning = true;
     for (let scan of scans) {
       for (let ip of range(String(scan.ip_start), String(scan.ip_end))) {
-        logger.log('Scanning ' + String(ip), logger.LOG_GREEN);
+        logger.log('Scanning ' + String(ip), logger.LOG_DEFAULT);
         await scanner.ScanIp(sequelize, Number(scan.id), ip, ports);
         await timeout(scanDelayMs);
       }
