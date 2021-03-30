@@ -1,4 +1,5 @@
 const INTERNAL_SERVER_ERROR = 500;
+const BAD_REQUEST = 400;
 
 async function Api(router, sequelize) {
 
@@ -72,13 +73,59 @@ async function Api(router, sequelize) {
    *      tags:
    *      - "Ports"
    *      summary: Update port with new configuration
-   *      description: ""
-   *      responses:
+   *      produces:
+   *          - application/json
+   *      consumes:
+   *          - application/json
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                id:
+   *                  type: number
+   *                port:
+   *                  type: string
+   *                enabled:
+   *                  type: boolean
+   *                port_description:
+   *                  type: string
+   *              required:
+   *                - id
+   *                - port
+   *                - enabled
+   *                - port_description
+   *              example:
+   *                id: 1
+   *                port: 80
+   *                enabled: true
+   *                port_description: HTTP Protocol
+   *        responses:
    *        '200':
    *          description: OK
    */
   router.put('/ports', async function (req, res) {
-    res.json({status: 'not implemented'});
+    try {
+      const id = req.body.id;
+      const port = req.body.port;
+      const enabled = req.body.enabled;
+      const port_description = req.body.port_description;
+      if (id === undefined) {
+        res.status(BAD_REQUEST);
+        res.send('port attribute \'id\' is missing!')
+      } else {
+        const updated = await sequelize.Port.update({
+          port: port,
+          enabled: enabled,
+          port_description: port_description,
+        }, {where: {id: id}});
+        res.json({updated: updated[0] === 1});
+      }
+    } catch (e) {
+      res.status(INTERNAL_SERVER_ERROR);
+      res.send(e);
+    }
   });
 
   /**
