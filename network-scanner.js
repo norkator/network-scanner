@@ -6,6 +6,7 @@ const schedule = require('node-schedule');
 const scanner = require('./module/scanner');
 const logger = require('./module/logger');
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
@@ -33,6 +34,8 @@ database.DatabaseExists().then(async () => {
   const sequelize = require('./module/sequelize');
 
   // init api
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({extended: true,}));
   const swaggerSpec = swaggerJsdoc(swaggerOptions);
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   require('./module/api').Api(app, sequelize); // add routes

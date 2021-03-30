@@ -1,3 +1,6 @@
+const INTERNAL_SERVER_ERROR = 500;
+const BAD_REQUEST = 400;
+
 async function Api(router, sequelize) {
 
   /**
@@ -27,12 +30,40 @@ async function Api(router, sequelize) {
    *      - "Ports"
    *      summary: Create port which is used for scanning
    *      description: ""
-   *      responses:
+   *      produces:
+   *          - application/json
+   *      consumes:
+   *          - application/json
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                port:
+   *                  type: string
+   *                port_description:
+   *                  type: string
+   *              example:
+   *                port: 80
+   *                port_description: HTTP Protocol
+   *        responses:
    *        '200':
    *          description: OK
    */
   router.post('/ports', async function (req, res) {
-    res.json({status: 'not implemented'});
+    try {
+      const port = req.body.port;
+      const port_description = req.body.port_description;
+      const inserted = await sequelize.Port.create({
+        port: port,
+        port_description: port_description,
+      });
+      res.json({id: inserted.id});
+    } catch (e) {
+      res.status(INTERNAL_SERVER_ERROR);
+      res.send(e);
+    }
   });
 
   /**
@@ -42,13 +73,59 @@ async function Api(router, sequelize) {
    *      tags:
    *      - "Ports"
    *      summary: Update port with new configuration
-   *      description: ""
-   *      responses:
+   *      produces:
+   *          - application/json
+   *      consumes:
+   *          - application/json
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                id:
+   *                  type: number
+   *                port:
+   *                  type: string
+   *                enabled:
+   *                  type: boolean
+   *                port_description:
+   *                  type: string
+   *              required:
+   *                - id
+   *                - port
+   *                - enabled
+   *                - port_description
+   *              example:
+   *                id: 1
+   *                port: 80
+   *                enabled: true
+   *                port_description: HTTP Protocol
+   *        responses:
    *        '200':
    *          description: OK
    */
   router.put('/ports', async function (req, res) {
-    res.json({status: 'not implemented'});
+    try {
+      const id = req.body.id;
+      const port = req.body.port;
+      const enabled = req.body.enabled;
+      const port_description = req.body.port_description;
+      if (id === undefined) {
+        res.status(BAD_REQUEST);
+        res.send('port attribute \'id\' is missing!')
+      } else {
+        const updated = await sequelize.Port.update({
+          port: port,
+          enabled: enabled,
+          port_description: port_description,
+        }, {where: {id: id}});
+        res.json({updated: updated[0] === 1});
+      }
+    } catch (e) {
+      res.status(INTERNAL_SERVER_ERROR);
+      res.send(e);
+    }
   });
 
   /**
@@ -64,10 +141,10 @@ async function Api(router, sequelize) {
    *          description: OK
    */
   router.get('/scans', async function (req, res) {
-    const ports = await sequelize.Scan.findAll({
+    const scans = await sequelize.Scan.findAll({
       raw: true,
     });
-    res.json(ports);
+    res.json(scans);
   });
 
   /**
@@ -78,12 +155,45 @@ async function Api(router, sequelize) {
    *      - "Scans"
    *      summary: Create configured scan
    *      description: ""
-   *      responses:
+   *      produces:
+   *          - application/json
+   *      consumes:
+   *          - application/json
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                ip_start:
+   *                  type: string
+   *                ip_end:
+   *                  type: string
+   *                enabled:
+   *                  type: boolean
+   *              example:
+   *                ip_start: 192.168.1.1
+   *                ip_end: 192.168.1.254
+   *                enabled: true
+   *        responses:
    *        '200':
    *          description: OK
    */
   router.post('/scans', async function (req, res) {
-    res.json({status: 'not implemented'});
+    try {
+      const ip_start = req.body.ip_start;
+      const ip_end = req.body.ip_end;
+      const enabled = req.body.enabled;
+      const inserted = await sequelize.Scan.create({
+        ip_start: ip_start,
+        ip_end: ip_end,
+        enabled: enabled,
+      });
+      res.json({id: inserted.id});
+    } catch (e) {
+      res.status(INTERNAL_SERVER_ERROR);
+      res.send(e);
+    }
   });
 
   /**
@@ -94,12 +204,65 @@ async function Api(router, sequelize) {
    *      - "Scans"
    *      summary: Update configured scan
    *      description: ""
+   *      produces:
+   *          - application/json
+   *      consumes:
+   *          - application/json
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                id:
+   *                  type: number
+   *                ip_start:
+   *                  type: string
+   *                ip_end:
+   *                  type: string
+   *                enabled:
+   *                  type: boolean
+   *                finished:
+   *                  type: boolean
+   *              required:
+   *                - id
+   *                - ip_start
+   *                - ip_end
+   *                - enabled
+   *                - finished
+   *              example:
+   *                id: 1
+   *                ip_start: 192.168.1.1
+   *                ip_end: 192.168.1.254
+   *                enabled: true
+   *                finished: false
    *      responses:
    *        '200':
    *          description: OK
    */
   router.put('/scans', async function (req, res) {
-    res.json({status: 'not implemented'});
+    try {
+      const id = req.body.id;
+      const ip_start = req.body.ip_start;
+      const ip_end = req.body.ip_end;
+      const enabled = req.body.enabled;
+      const finished = req.body.finished;
+      if (id === undefined) {
+        res.status(BAD_REQUEST);
+        res.send('scan attribute \'id\' is missing!')
+      } else {
+        const updated = await sequelize.Scan.update({
+          ip_start: ip_start,
+          ip_end: ip_end,
+          enabled: enabled,
+          finished: finished,
+        }, {where: {id: id}});
+        res.json({updated: updated[0] === 1});
+      }
+    } catch (e) {
+      res.status(INTERNAL_SERVER_ERROR);
+      res.send(e);
+    }
   });
 
   /**
