@@ -1,3 +1,5 @@
+const INTERNAL_SERVER_ERROR = 500;
+
 async function Api(router, sequelize) {
 
   /**
@@ -27,12 +29,40 @@ async function Api(router, sequelize) {
    *      - "Ports"
    *      summary: Create port which is used for scanning
    *      description: ""
-   *      responses:
+   *      produces:
+   *          - application/json
+   *      consumes:
+   *          - application/json
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                port:
+   *                  type: string
+   *                port_description:
+   *                  type: string
+   *              example:
+   *                port: 80
+   *                port_description: HTTP Protocol
+   *        responses:
    *        '200':
    *          description: OK
    */
   router.post('/ports', async function (req, res) {
-    res.json({status: 'not implemented'});
+    try {
+      const port = req.body.port;
+      const port_description = req.body.port_description;
+      const inserted = await sequelize.Port.create({
+        port: port,
+        port_description: port_description,
+      });
+      res.json({id: inserted.id});
+    } catch (e) {
+      res.status(INTERNAL_SERVER_ERROR);
+      res.send(e);
+    }
   });
 
   /**
