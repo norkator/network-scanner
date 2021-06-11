@@ -66,6 +66,7 @@ database.DatabaseExists().then(async () => {
  * @constructor
  */
 async function RunScans(sequelize) {
+  const torScanEnabled = process.env.USE_TOR === 'true';
   const ports = await GetPorts(sequelize);
   if (ports != null) {
     const scans = await GetScans(sequelize);
@@ -76,7 +77,11 @@ async function RunScans(sequelize) {
     for (let scan of scans) {
       for (let ip of range(String(scan.ip_start), String(scan.ip_end))) {
         logger.log('Scanning ' + String(ip), logger.LOG_DEFAULT);
-        await scanner.ScanIp(sequelize, Number(scan.id), ip, ports);
+        if (torScanEnabled) {
+          await scanner.TorScanIp(sequelize, Number(scan.id), ip, ports);
+        } else {
+          await scanner.ScanIp(sequelize, Number(scan.id), ip, ports);
+        }
         await timeout(scanDelayMs);
       }
       await SetScanFinished(sequelize, Number(scan.id));
