@@ -63,7 +63,7 @@ exports.TorScanIp = async function (sequelize, scanId, targetIp, ports) {
         status: 'open',
         banner: null,
       });
-    });
+    }).catch(() => null);
   }
   return true;
 };
@@ -71,7 +71,6 @@ exports.TorScanIp = async function (sequelize, scanId, targetIp, ports) {
 
 function torScanPromise(targetIp, port, scanId) {
   return new Promise((resolve, reject) => {
-    console.log('scan: ' + 'http://' + targetIp);
     const options = {
       url: 'http://' + targetIp /*/ + ':' + port*/,
       // timeout: 500
