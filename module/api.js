@@ -3,6 +3,28 @@ const BAD_REQUEST = 400;
 
 async function Api(router, sequelize) {
 
+
+  /**
+   * Small table results viewer
+   */
+  router.get('/', async function (req, res) {
+    const results = await sequelize.Result.findAll();
+    let str = '<table>\n' +
+      '  <tr>\n' +
+      '    <th>ScanId</th>\n' +
+      '    <th>IP</th>\n' +
+      '    <th>Port</th>\n' +
+      '  </tr>\n';
+    results.forEach(result => {
+      str = str + '<tr>\n' +
+        '    <td>' + result.scanId + '</td>\n' +
+        '    <td><a target="_blank" href="http://' + result.ip + '">http://' + result.ip + '</a></td>\n' +
+        '    <td>' + result.port + '</td>\n' +
+        '  </tr>\n'
+    });
+    res.send(str + '</table>')
+  });
+
   /**
    * @swagger
    * /ports:

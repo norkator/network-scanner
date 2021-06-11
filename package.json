@@ -7,6 +7,9 @@
   "author": "Norkator <nitramite@outlook.com>",
   "license": "MIT",
   "private": false,
+  "scripts": {
+    "scan": "node network-scanner.js"
+  },
   "dependencies": {
     "body-parser": "1.19.0",
     "dotenv": "8.2.0",
@@ -18,6 +21,7 @@
     "pgtools": "0.3.1",
     "sequelize": "6.6.2",
     "swagger-jsdoc": "6.1.0",
-    "swagger-ui-express": "4.1.6"
+    "swagger-ui-express": "4.1.6",
+    "tor-request": "3.1.0"
   }
 }
