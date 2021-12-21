@@ -11,14 +11,13 @@
 </body>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>
-    $("#scanBtn").click(function(){
-        console.log('scanning1');
-        $.post("./index",{
-            msg: 'message'
-        },
-        function(data,status){
-            console.log('scanning2');
+    $(document).ready(function(){
+        $.ajax({ url: "./scans",
+            context: document.body,
+            success: function(){
+                alert("done");
+            }
         });
-    }); 
+    });
 </script>
 </html>
