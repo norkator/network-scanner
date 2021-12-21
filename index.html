@@ -9,6 +9,7 @@
 <body>
     <h1 class="text-center">NETWORK-SCANNER</h1>
 
+    
     <div id="scanTable" class="container mt-5">
         <div class="row">
             <p class="col">id</p>
@@ -17,7 +18,15 @@
             <p class="col">enabled</p>
             <p class="col">finished</p>
         </div>
-
+    </div>
+    
+    <div id="portTable" class="container mt-5">
+        <div class="row">
+            <p class="col">id</p>
+            <p class="col">port</p>
+            <p class="col">enabled</p>
+            <p class="col">port_description</p>
+        </div>
     </div>
 
 </body>
@@ -27,6 +36,7 @@ $(document).ready(function(){
     // $.get("./results", function(data, status){
     //     console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
     // });
+    
     $.get("./scans", function(data, status){
         if(status == 'success'){
             for(a=0;a<data.length;a++){
@@ -60,9 +70,36 @@ $(document).ready(function(){
             }
         }
     });
-    // $.get("./ports", function(data, status){
-    //     console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
-    // });
+    
+    $.get("./ports", function(data, status){
+        console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+        
+        if(status == 'success'){
+            for(a=0;a<data.length;a++){
+                var id = document.createElement('p');
+                    id.className = 'col';
+                    id.innerHTML = data[a].id;
+                var port = document.createElement('p');
+                    port.className = 'col';
+                    port.innerHTML = data[a].port;
+                var enabled = document.createElement('p');
+                    enabled.className = 'col';
+                    enabled.innerHTML = data[a].enabled;
+                var port_description = document.createElement('p');
+                    port_description.className = 'col';
+                    port_description.innerHTML = data[a].port_description;
+                
+                var row = document.createElement('div');
+                    row.className = 'row';
+                    row.append(id);
+                    row.append(port);
+                    row.append(enabled);
+                    row.append(port_description);
+                
+                document.getElementById('portTable').append(row);
+            }
+        }
+    });
 });
 </script>
 </html>
