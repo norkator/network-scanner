@@ -41,11 +41,11 @@
 </body>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>
-var ajax_f = function(){
+var getPorts = function(){
     $.get("./ports", function(data, status){
         var portRowIdStr = document.getElementById('portTable').lastChild.id;
         if(portRowIdStr != null){
-            rowsNo = Number(portRowIdStr.slice(-1)) + 1;
+            rowsNo = Number(portRowIdStr.substring(7)) + 1;
             for(a=0;a<rowsNo;a++){
                 document.getElementById('portTable').removeChild(document.getElementById('portRow'+a));
             }
@@ -80,8 +80,16 @@ var ajax_f = function(){
     });
 }
 
-$(document).ready(function(){
+var getResults = function(){
     $.get("./results", function(data, status){
+        var resultRowIdStr = document.getElementById('resultTable').lastChild.id;
+        if(resultRowIdStr != null){
+            rowsNo = Number(resultRowIdStr.substring(9)) + 1;
+            for(a=0;a<rowsNo;a++){
+                document.getElementById('resultTable').removeChild(document.getElementById('resultRow'+a));
+            }
+        } 
+
         if(status == 'success'){
             for(a=0;a<data.length;a++){
                 var id = document.createElement('p');
@@ -102,6 +110,7 @@ $(document).ready(function(){
                     banner.innerHTML = data[a].banner;
                 
                 var row = document.createElement('div');
+                    row.id = 'resultRow'+a
                     row.className = 'row p-2 text-center';
                     row.append(id);
                     row.append(scanId);
@@ -113,8 +122,19 @@ $(document).ready(function(){
             }
         }
     });
-    
+}
+
+var getScans = function(){
     $.get("./scans", function(data, status){
+
+        var scanRowIdStr = document.getElementById('scanTable').lastChild.id;
+        if(scanRowIdStr != null){
+            rowsNo = Number(scanRowIdStr.substring(7)) + 1;
+            for(a=0;a<rowsNo;a++){
+                document.getElementById('scanTable').removeChild(document.getElementById('scanRow'+a));
+            }
+        } 
+
         if(status == 'success'){
             for(a=0;a<data.length;a++){
                 var id = document.createElement('p');
@@ -136,6 +156,7 @@ $(document).ready(function(){
                     finished.innerHTML = data[a].finished;
                 
                 var row = document.createElement('div');
+                    row.id = 'scanRow'+a
                     row.className = 'row p-2 text-center';
                     row.append(id);
                     row.append(ip_start);
@@ -147,10 +168,18 @@ $(document).ready(function(){
             }
         }
     });
-    
-    setInterval(ajax_f, 100);
+}
 
+
+$(document).ready(function(){
+    getPorts();
+    getResults();
+    getScans();
     
+    setInterval(getPorts, 1000);
+    setInterval(getResults, 1000);
+    setInterval(getScans, 1000);
+
 });
 </script>
 </html>
