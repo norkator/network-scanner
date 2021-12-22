@@ -9,7 +9,6 @@
 <body>
     <h1 class="text-center display-1 mt-3">NETWORK<button class="btn btn-lg btn-success mx-3">Scan Now</button>SCANNER</h1>
 
-    
     <div id="scanTable" class="container mt-5 ms-5 float-start border rounded" style="width: 45%; height: 35%; overflow-y: scroll;">
         <div class="row bg-dark text-light p-2 text-center">
             <p class="col-1">id</p>
@@ -33,20 +32,56 @@
         <div class="row bg-dark text-light p-2 text-center">
             <p class="col-1">id</p>
             <p class="col-1">scanId</p>
-            <p class="col">ip</p>
+            <a href="#" class="col text-info">ip</a>
             <p class="col">status</p>
             <p class="col">banner</p>
         </div>
     </div>
 
-    
-
 </body>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>
+var ajax_f = function(){
+    $.get("./ports", function(data, status){
+        var portRowIdStr = document.getElementById('portTable').lastChild.id;
+        if(portRowIdStr != null){
+            rowsNo = Number(portRowIdStr.slice(-1)) + 1;
+            for(a=0;a<rowsNo;a++){
+                document.getElementById('portTable').removeChild(document.getElementById('portRow'+a));
+            }
+        } 
+
+        if(status == 'success'){
+            for(a=0;a<data.length;a++){
+                var id = document.createElement('p');
+                    id.className = 'col-1';
+                    id.innerHTML = data[a].id;
+                var port = document.createElement('p');
+                    port.className = 'col';
+                    port.innerHTML = data[a].port;
+                var enabled = document.createElement('p');
+                    enabled.className = 'col-2';
+                    enabled.innerHTML = data[a].enabled;
+                var port_description = document.createElement('p');
+                    port_description.className = 'col-4';
+                    port_description.innerHTML = data[a].port_description;
+                
+                var row = document.createElement('div');
+                    row.id = 'portRow'+a
+                    row.className = 'row p-2 text-center';
+                    row.append(id);
+                    row.append(port);
+                    row.append(enabled);
+                    row.append(port_description);
+                
+                document.getElementById('portTable').append(row);
+            }
+        }
+    });
+}
+
 $(document).ready(function(){
     $.get("./results", function(data, status){
-        console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
         if(status == 'success'){
             for(a=0;a<data.length;a++){
                 var id = document.createElement('p');
@@ -113,33 +148,9 @@ $(document).ready(function(){
         }
     });
     
-    $.get("./ports", function(data, status){
-        if(status == 'success'){
-            for(a=0;a<data.length;a++){
-                var id = document.createElement('p');
-                    id.className = 'col-1';
-                    id.innerHTML = data[a].id;
-                var port = document.createElement('p');
-                    port.className = 'col';
-                    port.innerHTML = data[a].port;
-                var enabled = document.createElement('p');
-                    enabled.className = 'col-2';
-                    enabled.innerHTML = data[a].enabled;
-                var port_description = document.createElement('p');
-                    port_description.className = 'col-4';
-                    port_description.innerHTML = data[a].port_description;
-                
-                var row = document.createElement('div');
-                    row.className = 'row p-2 text-center';
-                    row.append(id);
-                    row.append(port);
-                    row.append(enabled);
-                    row.append(port_description);
-                
-                document.getElementById('portTable').append(row);
-            }
-        }
-    });
+    setInterval(ajax_f, 100);
+
+    
 });
 </script>
 </html>
