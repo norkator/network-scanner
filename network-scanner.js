@@ -29,9 +29,8 @@ const swaggerOptions = {
 	apis: ['./module/api.js'],
 };
 
-
 app.get('/index', (req, res) => {
-	res.sendFile('index.html', {
+	res.sendFile('ui/index.html', {
 		root: path.join(__dirname, './')
 	});
 });

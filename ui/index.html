@@ -6,33 +6,37 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
-<body>
-    <h1 class="text-center display-1 mt-3">NETWORK<button class="btn btn-lg btn-success mx-3">Scan Now</button>SCANNER</h1>
-
-    <div id="scanTable" class="container mt-5 ms-5 float-start border rounded" style="width: 45%; height: 35%; overflow-y: scroll;">
-        <div class="row bg-dark text-light p-2 text-center">
-            <p class="col-1">id</p>
-            <a href="#" class="col text-info">ip_start</a>
-            <a href="#" class="col text-info">ip_end</a>
+<body class="bg-dark">
+    <h1 class="text-center text-light mt-3 display-1">NETWORK SCANNER</h1>
+    
+    <div id="scanTable" class="container mt-5 ms-5 float-start text-warning border-info border-bottom" style="width: 45%; height: 35%; overflow-y: scroll; border-radius: 20px;">
+        <div class="row text-dark p-2 text-center bg-info" style="font-size: 20px;">
+            <p class="col-1"><b>PortId</b></p>
+            <p class="col">ip_start</p>
+            <p class="col">ip_end</p>
             <p class="col-2">enabled</p>
             <p class="col-2">finished</p>
         </div>
     </div>
     
-    <div id="portTable" class="container mt-5 me-5 float-end border rounded" style="width: 45%; height: 35%; overflow-y: scroll;">
-        <div class="row bg-dark text-light p-2 text-center">
-            <p class="col-1">id</p>
+    <div id="portTable" class="container mt-5 me-5 float-end text-warning border-info border-bottom" style="width: 45%; height: 35%; overflow-y: scroll; border-radius: 20px;">
+        <div class="row text-dark p-2 text-center bg-info" style="font-size: 20px;">
+            <p class="col-1"><b>ScanId</b></p>
             <p class="col">port</p>
             <p class="col-2">enabled</p>
             <p class="col-4">port_description</p>
         </div>
     </div>
-    
-    <div id="resultTable" class="container mb-5 fixed-bottom border rounded" style="height: 35%; overflow-y: scroll;">
-        <div class="row bg-dark text-light p-2 text-center">
-            <p class="col-1">id</p>
+
+    <center>
+        <button class="btn btn-lg btn-outline-light mx-auto mt-5">Start Scan</button>
+    </center>
+
+    <div id="resultTable" class="container mb-2 fixed-bottom text-info border-light border-bottom" style="height: 35%; overflow-y: scroll; border-radius: 20px;">
+        <div class="row text-dark p-2 text-center bg-light" style="font-size: 20px;">
+            <p class="col-1"><b>ResultId</b></p>
             <p class="col-1">scanId</p>
-            <a href="#" class="col text-info">ip</a>
+            <p class="col">ip</p>
             <p class="col">status</p>
             <p class="col">banner</p>
         </div>
@@ -169,7 +173,6 @@ var getScans = function(){
         }
     });
 }
-
 
 $(document).ready(function(){
     getPorts();
