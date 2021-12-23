@@ -35,6 +35,44 @@ app.get('/index', (req, res) => {
 	});
 });
 
+app.get('/scanStart', (req, res) => {
+	console.log('got here');
+	
+
+	// Check database existence
+	database.DatabaseExists().then(async () => {
+		const sequelize = require('./module/sequelize');
+
+		// init api
+		app.use(bodyParser.json());
+		app.use(bodyParser.urlencoded({ extended: true, }));
+		const swaggerSpec = swaggerJsdoc(swaggerOptions);
+		app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+		require('./module/api').Api(app, sequelize); // add routes
+		app.use(function (req, res, next) {
+			logger.log(req.method + req.url, logger.LOG_UNDERSCORE);
+			next();
+		});
+		// app.listen(process.env.API_PORT, () => {
+		// 	logger.log(`API listening on port http://localhost:${process.env.API_PORT}/`, logger.LOG_YELLOW);
+		// 	logger.log(`API documentation at http://localhost:${process.env.API_PORT}/api-docs`, logger.LOG_YELLOW);
+		// });
+
+
+		// Repeat with scheduler
+		await RunScans(sequelize); // run immediately
+		schedule.scheduleJob('* /30 * * * *', async () => {
+			if (!scanRunning) {
+				await RunScans(sequelize);
+			}
+		});
+});
+
+
+
+	console.log('returning now')
+});
+
 // Check database existence
 database.DatabaseExists().then(async () => {
 	const sequelize = require('./module/sequelize');

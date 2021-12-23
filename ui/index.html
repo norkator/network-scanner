@@ -29,7 +29,7 @@
     </div>
 
     <center>
-        <button class="btn btn-lg btn-outline-light mx-auto mt-5">Start Scan</button>
+        <button id="scanBtn" class="btn btn-lg btn-outline-light mx-auto mt-5">Start Scan</button>
     </center>
 
     <div id="resultTable" class="container mb-2 fixed-bottom text-info border-light border-bottom" style="height: 35%; overflow-y: scroll; border-radius: 20px;">
@@ -181,8 +181,16 @@ $(document).ready(function(){
     
     setInterval(getPorts, 1000);
     setInterval(getResults, 1000);
-    setInterval(getScans, 1000);
-
+    setInterval(getScans, 1000);    
 });
+
+$("#scanBtn").click(function(){
+    console.log('in btn click now')
+
+    $.get("./scanStart", function(data, status){
+        console.log('backed')
+    })
+});
+
 </script>
 </html>
