@@ -10,17 +10,26 @@
 <body class="bg-dark">
     <h1 class="text-center text-light mt-3 display-1">NETWORK SCANNER</h1>
     
-    <div id="scanTable" class="container mt-5 ms-5 float-start text-warning border-info border-bottom" style="width: 45%; height: 35%; overflow-y: scroll; border-radius: 20px;">
+    <div id="scanTable" class="container mt-5 ms-5 float-start text-warning border-info border-bottom" style="width: 50%; height: 35%; overflow-y: scroll; border-radius: 20px;">
         <div class="row text-dark p-2 text-center bg-info" style="font-size: 20px;">
             <p class="col-1"><b>ScanId</b></p>
             <p class="col">ip_start</p>
             <p class="col">ip_end</p>
             <p class="col-2">enabled</p>
             <p class="col-2">finished</p>
+            <p class="col-2">scan_status</p>
+        </div>
+        <div class="row text-dark p-2 text-center bg-secondary" style="font-size: 15px; height: 40px;">
+            <div class="col-1"></div>
+            <input type="text" id="newScanIpStart" class="col text-center ms-2">
+            <input type="text" id="newScanIpEnd" class="col ms-2">
+            <input type="checkbox" id="newScanEnabled" class="col-2 text-center" style="height: 20px;">
+            <input type="checkbox" id="newScanFinished" class="col-2 text-center" style="height: 20px;">
+            <button id="saveNewScan" class="col-2">&#10004;</button>
         </div>
     </div>
 
-    <div id="portTable" class="container mt-5 me-5 float-end text-warning border-info border-bottom" style="width: 45%; height: 35%; overflow-y: scroll; border-radius: 20px;">
+    <div id="portTable" class="container mt-5 me-5 float-end text-warning border-info border-bottom" style="width: 40%; height: 35%; overflow-y: scroll; border-radius: 20px;">
         <div class="row text-dark p-2 text-center bg-info" style="font-size: 20px;">
             <p class="col-1"><b>PortId</b></p>
             <p class="col-2">port</p>
@@ -33,7 +42,7 @@
             <input type="text" id="newPortPort" class="col-2 text-center">
             <input type="checkbox" id="newPortEnabled" class="col-2" style="height: 20px;">
             <input type="text" id="newPortPortDesc" class="col text-center me-3">
-            <button id="saveNewPort" class="col-2"">&#10004;</button>
+            <button id="saveNewPort" class="col-2">&#10004;</button>
         </div>
     </div>
 
@@ -76,7 +85,7 @@ var getPorts = function(){
                     port.innerHTML = data[a].port;
                 var enabled = document.createElement('input');
                     enabled.type = 'checkbox';
-                    enabled.id = 'enabled'+a;
+                    enabled.id = 'portEnabled'+a;
                     enabled.className = 'col-2';
                     enabled.checked = data[a].enabled;
                     enabled.style.height = '20px';
@@ -85,7 +94,7 @@ var getPorts = function(){
                     port_description.className = 'col';
                     port_description.innerHTML = data[a].port_description;
                 var updatePort = document.createElement('button');
-                    updatePort.id = 'deletePort'+a
+                    updatePort.id = 'updatePort'+a
                     updatePort.className = 'col-2 btn btn-outline-info fa text-light';
                     updatePort.innerHTML = '&#xf087;';
                     updatePort.onmouseover = function(){
@@ -168,32 +177,55 @@ var getScans = function(){
 
         if(status == 'success'){
             for(a=0;a<data.length;a++){
-                var id = document.createElement('p');
-                    id.className = 'col-1';
-                    id.innerHTML = data[a].id;
+                var scanId = document.createElement('p');
+                    scanId.id = 'scanId'+a;
+                    scanId.className = 'col-1';
+                    scanId.innerHTML = data[a].id;
                 var ip_start = document.createElement('a');
+                    ip_start.id = 'ip_start'+a;
                     ip_start.className = 'col';
                     ip_start.innerHTML = data[a].ip_start;
                     ip_start.setAttribute('href', "http://"+data[a].ip_start);
                 var ip_end = document.createElement('a');
+                    ip_end.id = 'ip_end'+a;
                     ip_end.className = 'col';
                     ip_end.innerHTML = data[a].ip_end;
                     ip_end.setAttribute('href', "http://"+data[a].ip_end);
-                var enabled = document.createElement('p');
+                var enabled = document.createElement('input');
+                    enabled.id = 'ScanEnabled'+a;
+                    enabled.type = 'checkbox';
+                    enabled.id = 'enabled'+a;
                     enabled.className = 'col-2';
-                    enabled.innerHTML = data[a].enabled;
-                var finished = document.createElement('p');
+                    enabled.checked = data[a].enabled;
+                    enabled.style.height = '20px';
+                var finished = document.createElement('input');
+                    finished.id = 'finished'+a;
+                    finished.type = 'checkbox';
+                    finished.id = 'enabled'+a;
                     finished.className = 'col-2';
                     finished.innerHTML = data[a].finished;
+                    finished.style.height = '20px';
+                var updateScan = document.createElement('button');
+                    updateScan.id = 'updateScan'+a
+                    updateScan.className = 'col-2 btn btn-outline-info fa text-light';
+                    updateScan.innerHTML = '&#xf087;';
+                    updateScan.onmouseover = function(){
+                        this.style.cursor = 'pointer'; 
+                    };
+                    updateScan.onclick = function(){
+                        var idNo = (this.id.substring(8));
+                        
+                    }
                 
                 var row = document.createElement('div');
                     row.id = 'scanRow'+a
                     row.className = 'row p-2 text-center';
-                    row.append(id);
+                    row.append(scanId);
                     row.append(ip_start);
                     row.append(ip_end);
                     row.append(enabled);
                     row.append(finished);
+                    row.append(updateScan);
                 
                 document.getElementById('scanTable').append(row);
             }
@@ -223,6 +255,16 @@ $("#saveNewPort").click(function(){
     $.post("./ports", {
         port: document.getElementById('newPortPort').value,
         port_description: document.getElementById('newPortPortDesc').value,
+    }, function(data, status){
+        
+    })
+})
+
+$("#saveNewScan").click(function(){
+    $.post("./scans", {
+        ip_start: document.getElementById('newScanIpStart').value,
+        ip_end: document.getElementById('newScanIpEnd').value,
+        enabled: document.getElementById('newScanEnabled').value,
     }, function(data, status){
         
     })
