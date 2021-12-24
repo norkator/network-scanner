@@ -36,9 +36,6 @@ app.get('/index', (req, res) => {
 });
 
 app.get('/scanStart', (req, res) => {
-	console.log('got here');
-	
-
 	// Check database existence
 	database.DatabaseExists().then(async () => {
 		const sequelize = require('./module/sequelize');
@@ -66,11 +63,7 @@ app.get('/scanStart', (req, res) => {
 				await RunScans(sequelize);
 			}
 		});
-});
-
-
-
-	console.log('returning now')
+	});
 });
 
 // Check database existence

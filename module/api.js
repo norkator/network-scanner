@@ -77,9 +77,11 @@ async function Api(router, sequelize) {
     try {
       const port = req.body.port;
       const port_description = req.body.port_description;
+      const enabled = req.body.enabled;
       const inserted = await sequelize.Port.create({
         port: port,
         port_description: port_description,
+        enabled: enabled,
       });
       res.json({id: inserted.id});
     } catch (e) {
