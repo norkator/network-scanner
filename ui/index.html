@@ -70,7 +70,9 @@ var getScans = function(){
         if(scanRowIdStr != null){
             rowsNo = Number(scanRowIdStr.substring(7)) + 1;
             for(a=0;a<rowsNo;a++){
-                document.getElementById('scanTable').removeChild(document.getElementById('scanRow'+a));
+                if(document.getElementById('scanRow'+a) != null){
+                    document.getElementById('scanTable').removeChild(document.getElementById('scanRow'+a));
+                }
             }
         } 
 
@@ -114,7 +116,17 @@ var getScans = function(){
                     };
                     deleteScan.onclick = function(){
                         var idNo = this.id.substring(10);
-                        alert(idNo);
+                        alert('going to delete');
+                        $.ajax({
+                            url: './scans',
+                            type: 'DELETE',
+                            data:{
+                                scanId: idNo
+                            },
+                            success: function(data, status){
+                                console.log('delete success');
+                            }
+                        })
                     }
                 
                 var row = document.createElement('div');
@@ -172,7 +184,7 @@ var getPorts = function(){
                     };
                     deletePort.onclick = function(){
                         var idNo = (this.id.substring(10));
-                        alert(idNo)
+                        alert(idNo);
                     }
                 
                 var row = document.createElement('div');

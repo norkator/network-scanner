@@ -291,6 +291,45 @@ async function Api(router, sequelize) {
 
   /**
    * @swagger
+   * /scans:
+   *    delete:
+   *      tags:
+   *      - "Scans"
+   *      summary: Delete a scan data
+   *      description: ""
+   *      produces:
+   *          - application/json
+   *      consumes:
+   *          - application/json
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                id:
+   *                  type: number
+   *              required:
+   *                - id
+   *              example:
+   *                id: 1
+   *      responses:
+   *        '200':
+   *          description: OK
+   */
+  router.delete('/scans', async function (req, res) {
+    const scanId = req.body.scanId;
+    const w = scanId === undefined ? {} : {id: scanId};
+    const scans = await sequelize.Scan.destroy({
+      raw: true,
+      where: w,
+    });
+    res.json(scans);
+    console.log('deleting'+scanId);
+  });
+
+  /**
+   * @swagger
    * /results:
    *    get:
    *      tags:
