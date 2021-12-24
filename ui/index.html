@@ -59,11 +59,10 @@
             <p class="col">banner</p>
         </div>
     </div>
-
 </body>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>
-    
+
 var getScans = function(){
     $.get("./scans", function(data, status){
         var scanRowIdStr = document.getElementById('scanTable').lastChild.id;
@@ -93,16 +92,30 @@ var getScans = function(){
                     ip_end.innerHTML = data[a].ip_end;
                     ip_end.setAttribute('href', "http://"+data[a].ip_end);
                 var enabled = document.createElement('input');
-                    enabled.id = 'ScanEnabled'+data[a].id;
+                    enabled.id = 'scanEnabled'+data[a].id;
                     enabled.type = 'checkbox';
-                    enabled.id = 'enabled'+a;
                     enabled.className = 'col-2';
                     enabled.checked = data[a].enabled;
                     enabled.style.height = '20px';
+                    enabled.onchange = function(){
+                        var idNo = this.id.substring(11);
+                        $.ajax({
+                            url: './scans',
+                            type: 'PUT',
+                            data:{
+                                id: idNo,
+                                ip_start: document.getElementById('ip_start'+idNo).innerHTML,
+                                ip_end: document.getElementById('ip_end'+idNo).innerHTML,
+                                enabled: document.getElementById('scanEnabled'+idNo).checked,
+                                finished: document.getElementById('finished'+idNo).checked,
+                            },
+                            success: function(data, status){
+                            }
+                        })
+                    }
                 var finished = document.createElement('input');
                     finished.id = 'finished'+data[a].id;
                     finished.type = 'checkbox';
-                    finished.id = 'enabled'+a;
                     finished.className = 'col-2';
                     finished.disabled = 'true';
                     finished.checked = data[a].finished;
@@ -171,6 +184,21 @@ var getPorts = function(){
                     enabled.className = 'col-2';
                     enabled.checked = data[a].enabled;
                     enabled.style.height = '20px';
+                    enabled.onchange = function(){
+                        var idNo = this.id.substring(11);
+                        $.ajax({
+                            url: './ports',
+                            type: 'PUT',
+                            data:{
+                                id: idNo,
+                                port: document.getElementById('port'+idNo).innerHTML,
+                                enabled: document.getElementById('portEnabled'+idNo).checked,
+                                port_description: document.getElementById('port_description'+idNo).innerHTML,
+                            },
+                            success: function(data, status){
+                            }
+                        })
+                    }
                 var port_description = document.createElement('p');
                     port_description.id = 'port_description'+data[a].id;
                     port_description.className = 'col';
