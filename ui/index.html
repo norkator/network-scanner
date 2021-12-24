@@ -4,6 +4,8 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Home</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
+    
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 <body class="bg-dark">
@@ -11,17 +13,17 @@
     
     <div id="scanTable" class="container mt-5 ms-5 float-start text-warning border-info border-bottom" style="width: 45%; height: 35%; overflow-y: scroll; border-radius: 20px;">
         <div class="row text-dark p-2 text-center bg-info" style="font-size: 20px;">
-            <p class="col-1"><b>PortId</b></p>
+            <p class="col-1"><b>ScanId</b></p>
             <p class="col">ip_start</p>
             <p class="col">ip_end</p>
             <p class="col-2">enabled</p>
             <p class="col-2">finished</p>
         </div>
     </div>
-    
+
     <div id="portTable" class="container mt-5 me-5 float-end text-warning border-info border-bottom" style="width: 45%; height: 35%; overflow-y: scroll; border-radius: 20px;">
         <div class="row text-dark p-2 text-center bg-info" style="font-size: 20px;">
-            <p class="col-1"><b>ScanId</b></p>
+            <p class="col-1"><b>PortId</b></p>
             <p class="col">port</p>
             <p class="col-2">enabled</p>
             <p class="col-4">port_description</p>
@@ -29,7 +31,7 @@
     </div>
 
     <center>
-        <button id="scanBtn" class="btn btn-lg btn-outline-light mx-auto mt-5">Start Scan</button>
+        <button id="scanBtn" class="btn btn-lg btn-outline-light mx-auto mt-5" style="border-radius: 15px; width: 200px;">Start Scan</button>
     </center>
 
     <div id="resultTable" class="container mb-2 fixed-bottom text-info border-light border-bottom" style="height: 35%; overflow-y: scroll; border-radius: 20px;">
@@ -57,26 +59,40 @@ var getPorts = function(){
 
         if(status == 'success'){
             for(a=0;a<data.length;a++){
-                var id = document.createElement('p');
-                    id.className = 'col-1';
-                    id.innerHTML = data[a].id;
+                var portId = document.createElement('p');
+                    portId.id = 'portId'+a;
+                    portId.className = 'col-1';
+                    portId.innerHTML = data[a].id;
                 var port = document.createElement('p');
+                    port.id = 'port'+a;
                     port.className = 'col';
                     port.innerHTML = data[a].port;
                 var enabled = document.createElement('p');
+                    enabled.id = 'enabled'+a;
                     enabled.className = 'col-2';
                     enabled.innerHTML = data[a].enabled;
                 var port_description = document.createElement('p');
+                    port_description.id = 'port_description'+a;
                     port_description.className = 'col-4';
                     port_description.innerHTML = data[a].port_description;
+                var editPort = document.createElement('i');
+                    editPort.id = 'editPort'+a
+                    editPort.className = 'col-1 fa fa-edit text-white';
+                    editPort.onmouseover = function(){
+                        this.style.cursor = 'pointer'; 
+                    };
+                    editPort.onclick = function(){
+                        var idNo = (this.id.substring(8));
+                    }
                 
                 var row = document.createElement('div');
                     row.id = 'portRow'+a
                     row.className = 'row p-2 text-center';
-                    row.append(id);
+                    row.append(portId);
                     row.append(port);
                     row.append(enabled);
                     row.append(port_description);
+                    row.append(editPort);
                 
                 document.getElementById('portTable').append(row);
             }
@@ -174,6 +190,8 @@ var getScans = function(){
     });
 }
 
+
+
 $(document).ready(function(){
     getPorts();
     getResults();
@@ -185,10 +203,8 @@ $(document).ready(function(){
 });
 
 $("#scanBtn").click(function(){
-    console.log('in btn click now')
-
     $.get("./scanStart", function(data, status){
-        console.log('backed')
+        
     })
 });
 
