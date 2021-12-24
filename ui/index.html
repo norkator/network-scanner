@@ -105,7 +105,7 @@ var getScans = function(){
                     finished.id = 'enabled'+a;
                     finished.className = 'col-2';
                     finished.disabled = 'true';
-                    finished.innerHTML = data[a].finished;
+                    finished.checked = data[a].finished;
                     finished.style.height = '20px';
                 var deleteScan = document.createElement('button');
                     deleteScan.id = 'deleteScan'+data[a].id;
@@ -116,7 +116,6 @@ var getScans = function(){
                     };
                     deleteScan.onclick = function(){
                         var idNo = this.id.substring(10);
-                        alert('going to delete');
                         $.ajax({
                             url: './scans',
                             type: 'DELETE',
@@ -124,7 +123,6 @@ var getScans = function(){
                                 scanId: idNo
                             },
                             success: function(data, status){
-                                console.log('delete success');
                             }
                         })
                     }
@@ -151,7 +149,9 @@ var getPorts = function(){
         if(portRowIdStr != null){
             rowsNo = Number(portRowIdStr.substring(7)) + 1;
             for(a=0;a<rowsNo;a++){
-                document.getElementById('portTable').removeChild(document.getElementById('portRow'+a));
+                if(document.getElementById('portRow'+a) != null){
+                    document.getElementById('portTable').removeChild(document.getElementById('portRow'+a));
+                }
             }
         } 
 
@@ -183,12 +183,20 @@ var getPorts = function(){
                         this.style.cursor = 'pointer'; 
                     };
                     deletePort.onclick = function(){
-                        var idNo = (this.id.substring(10));
-                        alert(idNo);
+                        var idNo = this.id.substring(10);
+                        $.ajax({
+                            url: './ports',
+                            type: 'DELETE',
+                            data:{
+                                portId: idNo
+                            },
+                            success: function(data, status){
+                            }
+                        })
                     }
                 
                 var row = document.createElement('div');
-                    row.id = 'portRow'+a
+                    row.id = 'portRow'+data[a].id;
                     row.className = 'row p-2 text-center';
                     row.append(portId);
                     row.append(port);
