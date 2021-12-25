@@ -40,6 +40,9 @@ async function Api(router, sequelize) {
   router.get('/ports', async function (req, res) {
     const ports = await sequelize.Port.findAll({
       raw: true,
+      order: [
+        ['id', 'ASC'],
+      ]
     });
     res.json(ports);
   });
@@ -205,6 +208,9 @@ async function Api(router, sequelize) {
   router.get('/scans', async function (req, res) {
     const scans = await sequelize.Scan.findAll({
       raw: true,
+      order: [
+        ['id', 'ASC'],
+      ]
     });
     res.json(scans);
   });
@@ -389,6 +395,9 @@ async function Api(router, sequelize) {
     const ports = await sequelize.Result.findAll({
       raw: true,
       where: w,
+      order: [
+        ['id', 'ASC'],
+      ]
     });
     res.json(ports);
   });
