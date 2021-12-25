@@ -189,4 +189,5 @@ async function SetScanFinished(sequelize, scanId) {
 app.listen(process.env.API_PORT, () => {
 	logger.log(`API listening on port http://localhost:${process.env.API_PORT}/`, logger.LOG_YELLOW);
 	logger.log(`API documentation at http://localhost:${process.env.API_PORT}/api-docs`, logger.LOG_YELLOW);
+	logger.log(`Control UI available at http://localhost:${process.env.API_PORT}/index`, logger.LOG_YELLOW);
 });
