@@ -1,4 +1,5 @@
 const INTERNAL_SERVER_ERROR = 500;
+const NOT_FOUND = 404;
 const BAD_REQUEST = 400;
 
 async function Api(router, sequelize) {
@@ -39,7 +40,13 @@ async function Api(router, sequelize) {
    */
   router.get('/ports', async function (req, res) {
     const ports = await sequelize.Port.findAll({
+      // order: [
+      //   ['id', 'DESC'],
+      // ],
       raw: true,
+      order: [
+        ['id', 'ASC'],
+      ]
     });
     res.json(ports);
   });
@@ -77,9 +84,11 @@ async function Api(router, sequelize) {
     try {
       const port = req.body.port;
       const port_description = req.body.port_description;
+      const enabled = req.body.enabled;
       const inserted = await sequelize.Port.create({
         port: port,
         port_description: port_description,
+        enabled: enabled,
       });
       res.json({id: inserted.id});
     } catch (e) {
@@ -153,6 +162,44 @@ async function Api(router, sequelize) {
   /**
    * @swagger
    * /scans:
+   *    delete:
+   *      tags:
+   *      - "Ports"
+   *      summary: Delete a port data
+   *      description: ""
+   *      produces:
+   *          - application/json
+   *      consumes:
+   *          - application/json
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                id:
+   *                  type: number
+   *              required:
+   *                - id
+   *              example:
+   *                id: 1
+   *      responses:
+   *        '200':
+   *          description: OK
+   */
+  router.delete('/ports', async function (req, res) {
+    const portId = req.body.portId;
+    const w = portId === undefined ? {} : {id: portId};
+    const deleted = await sequelize.Port.destroy({
+      raw: true,
+      where: w,
+    });
+    res.json({id: deleted.id});
+  });
+
+  /**
+   * @swagger
+   * /scans:
    *    get:
    *      tags:
    *      - "Scans"
@@ -164,7 +211,13 @@ async function Api(router, sequelize) {
    */
   router.get('/scans', async function (req, res) {
     const scans = await sequelize.Scan.findAll({
+      // order: [
+      //   ['id', 'DESC'],
+      // ],
       raw: true,
+      order: [
+        ['id', 'ASC'],
+      ]
     });
     res.json(scans);
   });
@@ -289,6 +342,50 @@ async function Api(router, sequelize) {
 
   /**
    * @swagger
+   * /scans:
+   *    delete:
+   *      tags:
+   *      - "Scans"
+   *      summary: Delete a scan data
+   *      description: ""
+   *      produces:
+   *          - application/json
+   *      consumes:
+   *          - application/json
+   *      requestBody:
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                id:
+   *                  type: number
+   *              required:
+   *                - id
+   *              example:
+   *                id: 1
+   *      responses:
+   *        '200':
+   *          description: OK
+   */
+  router.delete('/scans', async function (req, res) {
+    const scanId = req.body.scanId;
+    if (scanId !== undefined) {
+      const deleted = await sequelize.Scan.destroy({
+        raw: true,
+        where: {
+          id: scanId,
+        },
+      });
+      res.json({id: deleted.id});
+    } else {
+      res.status(NOT_FOUND);
+      res.send('scan with provided scan id not found');
+    }
+  });
+
+  /**
+   * @swagger
    * /results:
    *    get:
    *      tags:
@@ -311,6 +408,9 @@ async function Api(router, sequelize) {
     const ports = await sequelize.Result.findAll({
       raw: true,
       where: w,
+      order: [
+        ['id', 'ASC'],
+      ]
     });
     res.json(ports);
   });

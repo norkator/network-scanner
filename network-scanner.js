@@ -1,5 +1,6 @@
 'use strict';
 
+const path = require('path');
 const database = require('./module/database');
 const range = require('ip-range-generator');
 const schedule = require('node-schedule');
@@ -28,6 +29,11 @@ const swaggerOptions = {
   apis: ['./module/api.js'],
 };
 
+app.get('/index', (req, res) => {
+  res.sendFile('ui/index.html', {
+    root: path.join(__dirname, './')
+  });
+});
 
 // Check database existence
 database.DatabaseExists().then(async () => {
@@ -43,18 +49,23 @@ database.DatabaseExists().then(async () => {
     logger.log(req.method + req.url, logger.LOG_UNDERSCORE);
     next();
   });
-  app.listen(process.env.API_PORT, () => {
-    logger.log(`API listening on port http://localhost:${process.env.API_PORT}/`, logger.LOG_YELLOW);
-    logger.log(`API documentation at http://localhost:${process.env.API_PORT}/api-docs`, logger.LOG_YELLOW);
-  });
 
-
-  // Repeat with scheduler
+  // Register scheduled task
   await RunScans(sequelize); // run immediately
   schedule.scheduleJob('* /30 * * * *', async () => {
     if (!scanRunning) {
       await RunScans(sequelize);
     }
+  });
+
+  app.get('/scanStart', async (req, res) => {
+    await RunScans(sequelize);
+  });
+
+  app.listen(process.env.API_PORT, () => {
+    logger.log(`API listening on port http://localhost:${process.env.API_PORT}/`, logger.LOG_YELLOW);
+    logger.log(`API documentation at http://localhost:${process.env.API_PORT}/api-docs`, logger.LOG_YELLOW);
+    logger.log(`Control UI available at http://localhost:${process.env.API_PORT}/index`, logger.LOG_YELLOW);
   });
 });
 
