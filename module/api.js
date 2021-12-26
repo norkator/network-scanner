@@ -1,4 +1,5 @@
 const INTERNAL_SERVER_ERROR = 500;
+const NOT_FOUND = 404;
 const BAD_REQUEST = 400;
 
 async function Api(router, sequelize) {
@@ -158,7 +159,7 @@ async function Api(router, sequelize) {
     }
   });
 
-    /**
+  /**
    * @swagger
    * /scans:
    *    delete:
@@ -186,15 +187,15 @@ async function Api(router, sequelize) {
    *        '200':
    *          description: OK
    */
-     router.delete('/ports', async function (req, res) {
-      const portId = req.body.portId;
-      const w = portId === undefined ? {} : {id: portId};
-      const deleted = await sequelize.Port.destroy({
-        raw: true,
-        where: w,
-      });
-      res.json({id: deleted.id});
+  router.delete('/ports', async function (req, res) {
+    const portId = req.body.portId;
+    const w = portId === undefined ? {} : {id: portId};
+    const deleted = await sequelize.Port.destroy({
+      raw: true,
+      where: w,
     });
+    res.json({id: deleted.id});
+  });
 
   /**
    * @swagger
@@ -369,12 +370,18 @@ async function Api(router, sequelize) {
    */
   router.delete('/scans', async function (req, res) {
     const scanId = req.body.scanId;
-    const w = scanId === undefined ? {} : {id: scanId};
-    const deleted = await sequelize.Scan.destroy({
-      raw: true,
-      where: w,
-    });
-    res.json({id: deleted.id});
+    if (scanId !== undefined) {
+      const deleted = await sequelize.Scan.destroy({
+        raw: true,
+        where: {
+          id: scanId,
+        },
+      });
+      res.json({id: deleted.id});
+    } else {
+      res.status(NOT_FOUND);
+      res.send('scan with provided scan id not found');
+    }
   });
 
   /**
